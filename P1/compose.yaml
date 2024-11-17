@@ -1,0 +1,23 @@
+name: app
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-project}
+      - POSTGRES_USER=${POSTGRES_USER:-project}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-project}
+
+  app:
+    image: alberthamoui/app:latest
+
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://project:project@db:5432/project}
+      SECRET_KEY: ${SECRET_KEY:-your_default_secret_key}
+
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
