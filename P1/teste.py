@@ -40,8 +40,18 @@ if token:
     }
     response = requests.get(f'{base_url}/consultar', headers=headers)
     print(f'Consultar - Status Code: {response.status_code}')
-    print(f'Consultar - Resposta: {response.json()}')
+    print(f'Consultar - Conteúdo: {response.text}')  # Mostrar o conteúdo da resposta
+    if response.status_code == 200:
+        try:
+            print(f'Consultar - Resposta: {response.json()}')
+        except Exception as e:
+            print(f'Erro ao decodificar JSON: {e}')
+    else:
+        print(f'Erro na consulta, status code: {response.status_code}')
+        print(f'Consultar - Resposta: {response.json()}')
 else:
     print("Token não recebido.")
 
 print('-' * 50)
+
+

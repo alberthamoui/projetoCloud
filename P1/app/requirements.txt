@@ -3,3 +3,4 @@ uvicorn
 PyJWT
 requests
 python-dotenv
+beautifulsoup4

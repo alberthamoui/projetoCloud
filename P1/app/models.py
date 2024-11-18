@@ -14,5 +14,4 @@ class Login(BaseModel):
     senha: str
 
 class Consult(BaseModel):
-    email: EmailStr
-    nome: str
+    headlines: List[str]  # Mudando para capturar uma lista de manchetes

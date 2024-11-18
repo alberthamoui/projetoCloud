@@ -52,10 +52,9 @@ Aqui será possível ver a base de dados criada e os dados inseridos.
 - Resposta: Token JWT.
 
 
-`GET /consultar`: Consulta dados financeiros de uma API externa (Alpha Vantage).
+`GET /consultar`: Consulta as manchetes de notícias do site `The Independent`.
 - Requisição: Cabeçalho com token JWT.
-- Resposta: Dados financeiros, como preço de ações (exemplo: AAPL).
-
+- Resposta: Lista de 10 manchetes
 `DELETE /delete`: Deleta todos os usuários cadastrados.
 - Requisição: Nenhuma.
 - Resposta: Mensagem de confirmação.
@@ -92,7 +91,6 @@ O arquivo compose.yaml está localizado no diretório raiz do projeto. Ele cont�
 │   ├── 📄 database.py 
 │   ├── 📄 models.py 
 │   ├── 📄 requirements.txt 
-│   ├── 📄 secret.py
 │   ├── 📄 Dockerfile
 ├── 📁 venv
 ├── 📄 .gitignore

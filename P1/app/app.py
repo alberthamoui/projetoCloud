@@ -9,6 +9,8 @@ import jwt
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
+from bs4 import BeautifulSoup
+
 
 app = FastAPI()
 load_dotenv()
@@ -18,8 +20,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 
 # --------------------------- JWT -----------------------------
-
-
 def create_jwt_token(user):
     payload = {
         "sub": user.email,
@@ -49,6 +49,11 @@ app.include_router(router)
 @app.get("/")
 def read_root():
     return {"users": users}
+
+
+@app.get("/teste") 
+def read_root():
+    return {"111111111111111111111": []}
 
 # --------------------------- Registrar Usuários -----------------------------
 @app.post("/registrar")
@@ -85,14 +90,16 @@ async def login(login: Login):
             return {"user": user, "token": token}
     raise HTTPException(status_code=401, detail="Credenciais inválidas.")
 
+
+# --------------------------- Deletar Usuários -----------------------------
+@app.delete("/delete")
+async def delete_all_users():
+    users.clear()
+    logging.info("Todos os usuários foram deletados.")
+    return {"message": "Todos os usuários foram deletados."}
+
+
 # --------------------------- Consultar Dados da API -----------------------------
-ALPHA_VANTAGE_API_KEY = "PQPY0AYLGMJD3PTN"  # Insira sua chave da API Alpha Vantage
-SYMBOL = "AAPL"  # Símbolo da ação desejada
-FUNCTION = "TIME_SERIES_INTRADAY"
-INTERVAL = "5min"
-ALPHA_VANTAGE_API_URL = f"https://www.alphavantage.co/query?function={FUNCTION}&symbol={SYMBOL}&interval={INTERVAL}&apikey={ALPHA_VANTAGE_API_KEY}"
-
-
 @app.get("/consultar", response_model=Consult)
 def get_user(authorization: str = Header(None, alias="Authorization")):
     if not authorization:
@@ -106,43 +113,26 @@ def get_user(authorization: str = Header(None, alias="Authorization")):
         raise HTTPException(status_code=401, detail="Credenciais inválidas (Sem payload).")
 
     # --------------------------- Consulta API Alpha Vantage -----------------------------
-    try:
-        response = requests.get(ALPHA_VANTAGE_API_URL)
-        
-        # Verifica se a resposta é 403 (problema com o token da API externa)
-        if response.status_code == 403:
-            logging.error("Erro 403: Token da API Alpha Vantage inválido ou excedeu o limite.")
-            raise HTTPException(status_code=403, detail="Token da API Alpha Vantage inválido ou limite excedido.")
-        
-        response.raise_for_status()  # Levanta exceções para outros códigos HTTP >= 400
-        
-        data = response.json()
-        
-        if "Time Series (5min)" in data:
-            latest_time = max(data["Time Series (5min)"].keys())
-            latest_data = data["Time Series (5min)"][latest_time]
-            dados = {
-                "symbol": SYMBOL,
-                "last_updated": latest_time,
-                "open": latest_data["1. open"],
-                "high": latest_data["2. high"],
-                "low": latest_data["3. low"],
-                "close": latest_data["4. close"],
-                "volume": latest_data["5. volume"]
-            }
-        else:
-            logging.error("Estrutura de dados inesperada na resposta da API Alpha Vantage.")
-            raise HTTPException(status_code=500, detail="Estrutura de dados inesperada na resposta da API.")
+    # Define the headers to mimic a request from a browser
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
 
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Erro ao consultar a API Alpha Vantage: {e}")
-        raise HTTPException(status_code=503, detail="Serviço Alpha Vantage indisponível no momento.")
+    # Send a GET request to The Independent's homepage
+    url = "https://www.independent.co.uk/"
+    response = requests.get(url, headers=headers)
     
-    return JSONResponse(content=dados)
+    if response.status_code != 200:
+        return {"error": "Failed to fetch data from The Independent."}
 
-# --------------------------- Deletar Usuários -----------------------------
-@app.delete("/delete")
-async def delete_all_users():
-    users.clear()
-    logging.info("Todos os usuários foram deletados.")
-    return {"message": "Todos os usuários foram deletados."}
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, "html.parser")
+    
+    # Extract the headlines (you may need to adjust this selector based on the site's structure)
+    headlines = []
+    for headline in soup.find_all("h2"):
+        text = headline.get_text(strip=True)
+        if text:
+            headlines.append(text)
+
+    return {"headlines": headlines[:10]}
