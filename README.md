@@ -64,14 +64,14 @@ Aqui será possível ver a base de dados criada e os dados inseridos.
 ## Screenshot dos Endpoints Testados
 Aqui está a captura de tela dos endpoints testados:
  <!-- colocar imagem aleatoria -->
-![Texto do link]()
+![Imagem Endpoints](img\endpoints.png)
 
 
 
 ## Vídeo de Execução da Aplicação
 Assista ao vídeo de execução:
 
-[Vídeo de execução](https://link-para-o-video.com)
+[Vídeo de execução](img\videoExecucao.mp4)
 
 
 ## Link para o Docker Hub
@@ -97,5 +97,8 @@ O arquivo compose.yaml está localizado no diretório raiz do projeto. Ele cont�
 ├── 📄 anotacao.txt
 ├── 📄 compose.yaml
 ├── 📄 teste.py
+├── 📁 img 
+├── 📄endpoins.png
+├── 📄 videoExecucao.mp4
 📄 README.md
 ```
