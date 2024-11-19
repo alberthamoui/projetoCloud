@@ -1,6 +1,12 @@
 import requests
 
-base_url = 'http://127.0.0.1:8000'
+# Teste para o Docker
+# base_url = 'http://127.0.0.1:8000'
+
+# Teste AWS
+base_url = "http://aa8e6d3f34d5343f2a4fa37753f87159-199765277.us-east-2.elb.amazonaws.com"
+
+
 
 register_data = {
     "nome": "Disciplina Cloud",
