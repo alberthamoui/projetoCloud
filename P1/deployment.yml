@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-app
+  labels:
+    app: fastapi
+    owner: alberthamoui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+        - name: fastapi-app
+          image: alberthamoui/app:latest  # Aqui você coloca a imagem do DockerHub
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://beto:beto@db:5432/beto"  # Aqui se conecta com o PostgreSQL
+            - name: SECRET_KEY
+              value: "mysecretkey"  # Certifique-se de usar uma chave secreta mais segura em produção
