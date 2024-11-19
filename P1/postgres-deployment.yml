@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+    owner: alberthamoui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17  # A imagem que você usa no Docker
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "beto"
+            - name: POSTGRES_USER
+              value: "beto"
+            - name: POSTGRES_PASSWORD
+              value: "beto"
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          emptyDir: {}
