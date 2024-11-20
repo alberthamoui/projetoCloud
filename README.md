@@ -1,4 +1,4 @@
-# Projeto Cloud - FastAPI e PostgreSQL
+# Projeto Cloud - Docker & AWS
 
 ### Nome do Aluno:
 Albert David Hamoui
