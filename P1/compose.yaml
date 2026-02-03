@@ -9,8 +9,10 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-project}
 
   app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
     image: alberthamoui/app:latest
-
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://project:project@db:5432/project}
       SECRET_KEY: ${SECRET_KEY:-your_default_secret_key}

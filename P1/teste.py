@@ -1,10 +1,9 @@
 import requests
+import os
 
-# Teste para o Docker
-# base_url = 'http://127.0.0.1:8000'
-
-# Teste AWS
-base_url = "http://aa8e6d3f34d5343f2a4fa37753f87159-199765277.us-east-2.elb.amazonaws.com"
+# URL da API: use variável de ambiente BASE_URL ou padrão local/Docker
+base_url = os.getenv("BASE_URL", "http://127.0.0.1:8000")
+# Para AWS, defina: set BASE_URL=http://<seu-load-balancer>.elb.amazonaws.com
 
 
 
@@ -18,7 +17,10 @@ print('Registrar')
 print('-' * 50)
 response = requests.post(f'{base_url}/registrar', json=register_data)
 print(f'Registro - Status Code: {response.status_code}')
-print(f'Registro - Resposta: {response.json()}')
+try:
+    print(f'Registro - Resposta: {response.json()}')
+except Exception:
+    print(f'Registro - Resposta (texto): {response.text}')
 
 login_data = {
     "email": "usuarioCloud@insper.edu.br",
@@ -30,9 +32,14 @@ print(f'\nLogin')
 print('-' * 50)
 response = requests.post(f'{base_url}/login', json=login_data)
 print(f'Login - Status Code: {response.status_code}')
-print(f'Login - Resposta: {response.json()}')
+try:
+    login_resp = response.json()
+    print(f'Login - Resposta: {login_resp}')
+except Exception:
+    print(f'Login - Resposta (texto): {response.text}')
+    login_resp = {}
 
-token = response.json().get('token')
+token = login_resp.get('token')
 print('-' * 50, '\n\n')
 
 print(f'\nConsultar')

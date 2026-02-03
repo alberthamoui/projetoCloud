@@ -4,3 +4,5 @@ PyJWT
 requests
 python-dotenv
 beautifulsoup4
+pytest>=7.0
+requests>=2.28

@@ -1,0 +1,130 @@
+# =============================================================================
+# Segredos e variáveis de ambiente
+# =============================================================================
+.env
+.env.*
+!.env.example
+!**/.env.example
+.env.local
+.env.dev
+.env.prod
+.env.development
+.env.production
+.env.test
+*.env
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+
+# Ambientes virtuais (podem conter paths ou configs locais)
+venv/
+.venv/
+env/
+ENV/
+
+# =============================================================================
+# Cloud / CLI / credenciais
+# =============================================================================
+# AWS
+.aws/
+*.pem
+credentials
+config
+# gcloud (arquivos de conta costumam ser .json)
+.gcloud/
+*credentials*.json
+*secrets*.json
+*-key.json
+# Azure
+.azure/
+# Terraform (estado pode conter segredos)
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+# Kubectl
+kubeconfig
+*.kubeconfig
+
+# =============================================================================
+# Chaves e certificados privados
+# =============================================================================
+*.key
+*.pem
+!*.pem.example
+id_rsa
+id_rsa.pub
+id_dsa
+id_ecdsa
+id_ed25519
+*.pfx
+*.p12
+*.jks
+*.keystore
+
+# =============================================================================
+# Arquivos de configuração que costumam ter tokens/senhas
+# =============================================================================
+*.secrets.*
+*.secrets
+credentials.*
+!credentials.example.*
+.secret
+secrets/
+*.credentials
+
+# =============================================================================
+# Logs, dumps e caches (podem vazar dados sensíveis)
+# =============================================================================
+logs/
+*.log
+*.dump
+*.sql
+!*.sql.example
+tmp/
+temp/
+.cache/
+
+# =============================================================================
+# IDE / OS (evitar lixo e configs locais)
+# =============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# Projeto (opcional — remova se quiser versionar os guias)
+# =============================================================================
+GUIA_PROJETO.md
+GUIA_APRESENTACAO.md
+Guia_apresentacao.md
+anotacao.txt

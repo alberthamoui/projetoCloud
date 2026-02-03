@@ -41,7 +41,13 @@ Este projeto implementa uma API utilizando **FastAPI**, com autenticação via *
 ### 💻 Uso da Aplicação
 #### 1. Acesse a aplicação em `http://localhost:8000`.
 #### 2. Utilize as rotas da API conforme a documentação abaixo.
-#### 3. Extra: Para testar a conexão com o banco de dados, execute o arquivo `teste.py`.
+#### 3. Validação oficial: execute os testes pytest (na raiz do repositório):
+    ```bash
+    pip install pytest
+    BASE_URL=http://127.0.0.1:8000 pytest teste2.py -v
+    ```
+    *(No Windows PowerShell: `$env:BASE_URL='http://127.0.0.1:8000'; pytest teste2.py -v`.)*  
+    Todos os testes devem passar (`9 passed`). O script `teste.py` (em P1) também pode ser usado para um fluxo manual.
 
 
 ---
@@ -49,7 +55,7 @@ Este projeto implementa uma API utilizando **FastAPI**, com autenticação via *
 ## 📚 Documentação dos Endpoints da API
 ### `POST /registrar`
 - **Descrição:** Registra um novo usuário.
-- **Entrada:** JSON com `email` e `senha`.
+- **Entrada:** JSON com `nome`, `email` e `senha`.
 - **Saída:** Token JWT gerado para o usuário registrado.
 
 ### `POST /login`
@@ -173,7 +179,7 @@ Por conta do tamanho do vídeo, ele esta disponível no link abaixo:
 ├── 📄 service.yml
 ├── 📄 teste.py
 📁 img 
-├── 🖼️ endpoins.png
+├── 🖼️ endpoints.png
 ├── 🎥 videoExecucao.mp4
 📄 README.md
 ```

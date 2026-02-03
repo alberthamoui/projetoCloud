@@ -15,6 +15,8 @@ from bs4 import BeautifulSoup
 app = FastAPI()
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is required")
 
 
 
@@ -51,9 +53,9 @@ def read_root():
     return {"users": users}
 
 
-@app.get("/teste") 
-def read_root():
-    return {"111111111111111111111": []}
+@app.get("/teste")
+def read_test():
+    return {"teste": "ok"}
 
 # --------------------------- Registrar Usuários -----------------------------
 @app.post("/registrar")
@@ -123,7 +125,7 @@ def get_user(authorization: str = Header(None, alias="Authorization")):
     response = requests.get(url, headers=headers)
     
     if response.status_code != 200:
-        return {"error": "Failed to fetch data from The Independent."}
+        raise HTTPException(status_code=502, detail="Failed to fetch data from The Independent.")
 
     # Parse the HTML content
     soup = BeautifulSoup(response.content, "html.parser")
