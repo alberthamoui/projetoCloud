@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends, APIRouter, Header
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 from models import User, Login, Consult, UserList
 from database import users
 import logging
@@ -11,14 +11,13 @@ from dotenv import load_dotenv
 import os
 from bs4 import BeautifulSoup
 
-
 app = FastAPI()
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is required")
 
-
+security = HTTPBearer()
 
 
 # --------------------------- JWT -----------------------------
@@ -103,37 +102,35 @@ async def delete_all_users():
 
 # --------------------------- Consultar Dados da API -----------------------------
 @app.get("/consultar", response_model=Consult)
-def get_user(authorization: str = Header(None, alias="Authorization")):
-    if not authorization:
-        raise HTTPException(status_code=401, detail="Credenciais não fornecidas (not authorization).")
-    if "Bearer " not in authorization:
-        raise HTTPException(status_code=401, detail="Credenciais incompatíveis (Sem Bearer).")
-    
-    token = authorization.split(" ")[1]
-    payload = verify_jwt_token(token)
-    if not payload:
-        raise HTTPException(status_code=401, detail="Credenciais inválidas (Sem payload).")
+def get_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    if credentials is None:
+        raise HTTPException(status_code=401, detail="Credenciais não fornecidas.")
 
-    # --------------------------- Consulta API Alpha Vantage -----------------------------
-    # Define the headers to mimic a request from a browser
+    token = credentials.credentials
+    logging.info(f"Token recebido: {token}")
+
+    payload = verify_jwt_token(token)
+    logging.info(f"Payload: {payload}")
+
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
     }
 
-    # Send a GET request to The Independent's homepage
     url = "https://www.independent.co.uk/"
-    response = requests.get(url, headers=headers)
-    
+    response = requests.get(url, headers=headers, timeout=10)
+
     if response.status_code != 200:
         raise HTTPException(status_code=502, detail="Failed to fetch data from The Independent.")
 
-    # Parse the HTML content
     soup = BeautifulSoup(response.content, "html.parser")
-    
-    # Extract the headlines (you may need to adjust this selector based on the site's structure)
+
     headlines = []
-    for headline in soup.find_all("h2"):
-        text = headline.get_text(strip=True)
+    for h in soup.find_all("h2"):
+        text = h.get_text(strip=True)
         if text:
             headlines.append(text)
 

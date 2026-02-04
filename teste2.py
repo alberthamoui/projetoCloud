@@ -75,6 +75,7 @@ def test_consultar_invalid_token():
     )
     assert r.status_code == 401, f"Esperado 401 para token inválido: {r.status_code} {r.text}"
 
+
 def test_register_duplicate_email_returns_409():
     email = unique_email()
     payload = {"nome": "Dup", "email": email, "senha": "123"}
@@ -83,7 +84,7 @@ def test_register_duplicate_email_returns_409():
     assert r1.status_code in (200, 201)
 
     r2 = requests.post(f"{BASE_URL}/registrar", json=payload, timeout=10)
-    assert r2.status_code == 409, f"Esperado 409 para email duplicado: {r2.status_code} {r2.text}"
+    assert r2.status_code == 409
 
 
 def test_registrar_invalid_email_returns_422():
